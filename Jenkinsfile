@@ -19,16 +19,16 @@ node{
 	
 	//--- Reading current job config ---
 	echo "Reading the job config"
-  def job = readFile "$JENKINS_HOME/jobs/recon-all/builds/QueueJobs/$upstreamBuilds.xml"
-	def parser = new XmlParser().parseText(job)
-	def job = "${parser.attribute("job")}"
-	def build ="${parser.attribute("build")}"
-	def name ="${parser.attribute("name")}"
-	def subject="${parser.attribute("subject")}"
-	def output="${parser.attribute("output")}"
+  	def job_config = readFile "$JENKINS_HOME/jobs/recon-all/builds/QueueJobs/$upstreamBuilds.xml"
+	def parser = new XmlParser().parseText(job_config)
+	def job_name = "${parser.attribute("job")}"
+	def build_ID ="${parser.attribute("build")}"
+	def owner_name ="${parser.attribute("name")}"
+	def subject_name="${parser.attribute("subject")}"
+	def output_folder="${parser.attribute("output")}"
 	 
 	 //Setting Build description
-	 currentBuild.displayName = "BUILD# $BUILD_ID- $OWNER"  
+	 currentBuild.displayName = "BUILD# $build_ID-$owner_name"  
 	
 	stage('DATA ACQUISITION'){
 		echo "DATA ACQUISITION" 
