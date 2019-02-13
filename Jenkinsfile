@@ -17,7 +17,7 @@ node{
   	}
   	
   	echo "$upstreamBuilds"
-  	def xml_name = "$upstreamBuilds.xml"
+  	def xml_name = "$upstreamBuilds" + ".xml"
   	echo "$xml_name" 
 	
 	//--- Reading current job config ---
