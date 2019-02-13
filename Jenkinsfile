@@ -15,23 +15,20 @@ node{
     	upstreamBuilds = "${b.getDisplayName()}"
     	manualTrigger = false
   	}
-  	
-  	echo "$upstreamBuilds"
   	def xml_name = "$upstreamBuilds" + ".xml"
-  	echo "$xml_name" 
 	
 	//--- Reading current job config ---
-//	echo "Reading the job config"
-//  def job_config = readFile "$JENKINS_HOME/jobs/recon-all/builds/QueueJobs/$upstreamBuilds.xml"
-//	def parser = new XmlParser().parseText(job_config)
-//	def job_name = "${parser.attribute("job")}"
-//	def build_ID ="${parser.attribute("build")}"
-//	def owner_name ="${parser.attribute("name")}"
-//	def subject_name="${parser.attribute("subject")}"
-//	def output_folder="${parser.attribute("output")}"
+	echo "Reading the job config"
+  	def job_config = readFile "$JENKINS_HOME/jobs/recon-all/builds/QueueJobs/$xml_name"
+	def parser = new XmlParser().parseText(job_config)
+	def job_name = "${parser.attribute("job")}"
+	def build_ID ="${parser.attribute("build")}"
+	def owner_name ="${parser.attribute("name")}"
+	def subject_name="${parser.attribute("subject")}"
+	def output_folder="${parser.attribute("output")}"
 	 
 	//Setting Build description
-//	currentBuild.displayName = "BUILD# $build_ID-$owner_name"  
+	currentBuild.displayName = "BUILD# $build_ID-$owner_name"  
 	
 	stage('DATA ACQUISITION'){
 		echo "DATA ACQUISITION" 
