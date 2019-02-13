@@ -35,12 +35,12 @@ node{
 		//Copy de Subject file to SUBJECT_DIR in Freesuerfer Server
 		echo "Connecting to freesurfer server to copy subject file"
 		sshagent(['JenkinsToFreesurfer_rsa']) {      
+			
 			//Create de subject file
-			echo "$JENKINS_HOME/jobs/$JOB_NAME/builds/$build_ID/fileParameters/$subject_name"
-			//def subject = new File ("$JENKINS_HOME/jobs/$JOB_NAME/builds/$build_ID/fileParameters/$subject_name")
+			def subject = new File ("$JENKINS_HOME/jobs/recon-all/builds/$build_ID/fileParameters/$subject_name")
 			
 			echo "Copy de Subject file to SUBJECT_DIR in Freesuerfer Server" 
-			//sh "scp $subject root@192.168.17.132:/usr/local/freesurfer/subjects/"
+			sh "scp $subject root@192.168.17.132:/usr/local/freesurfer/subjects/"
 			
 			//echo "Remove task and subject file"
 			//sh "rm -f $JENKINS_HOME/workspace/$JOB_NAME/$SUBJECT"
