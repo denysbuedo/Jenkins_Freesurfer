@@ -31,7 +31,20 @@ node{
 	currentBuild.displayName = "BUILD# $build_ID-$owner_name"  
 	
 	stage('DATA ACQUISITION'){
-		echo "DATA ACQUISITION" 
+		
+		//Copy de Subject file to SUBJECT_DIR in Freesuerfer Server
+		echo "Connecting to freesurfer server to copy subject file"
+		sshagent(['id_rsa_fsf']) {      
+			//Create de subject file
+			def subject = new File ("$JENKINS_HOME/workspace/$JOB_NAME/$SUBJECT")
+			
+			echo "Copy de Subject file to SUBJECT_DIR in Freesuerfer Server" 
+			sh "scp $subject root@192.168.17.132:/usr/local/freesurfer/subjects/"
+			
+			echo "Remove task and subject file"
+			sh "rm -f $JENKINS_HOME/workspace/$JOB_NAME/$SUBJECT"
+			sh "rm -f $JENKINS_HOME/workspace/$JOB_NAME/Task.xml"
+        } 
 	}
 
 	stage('DATA PROCESSING'){
