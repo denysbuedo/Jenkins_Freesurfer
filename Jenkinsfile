@@ -1,8 +1,8 @@
 /*
 @Autor: Denys Buedo Hidalgo
-@Proyecto: Jenkins_Freesurfer
+@Proyecto: Jenkins_Freesurfer (https://github.com/denysbuedo/Jenkins_Freesurfer.git)
 @Joint China-Cuba Laboratory
-@Universidad de las Ciencias InformÃ¡ticas
+@Universidad de las Ciencias InformÃƒÂ¡ticas
 */
 
 node{
@@ -32,33 +32,59 @@ node{
 	
 	stage('DATA ACQUISITION'){
 		
-		//Copy de Subject file to SUBJECT_DIR in Freesuerfer Server
-		echo "Connecting to freesurfer server to copy subject file"
+		//--- Starting ssh agent on Freesurfer server ---
 		sshagent(['fsf_id_rsa']) {      
 			
-			//Create de subject file
+			//--- Creating de subject file ---
 			def subject = new File ("$JENKINS_HOME/jobs/recon-all/builds/$build_ID/fileParameters/$subject_name")
 			
-			echo "Copy de Subject file to SUBJECT_DIR in Freesuerfer Server" 
+			//--- Copying de Subject file to SUBJECT_DIR in Freesuerfer Server --- 
 			sh 'ssh -o StrictHostKeyChecking=no root@192.168.17.132'
 			sh "scp $subject root@192.168.17.132:/usr/local/freesurfer/subjects/"
 			
-			//echo "Remove task and subject file"
-			//sh "rm -f $JENKINS_HOME/workspace/$JOB_NAME/$SUBJECT"
-			//sh "rm -f $JENKINS_HOME/workspace/$JOB_NAME/Task.xml"
+			//--- Remove task and subject file ---
+			sh "rm -f $JENKINS_HOME/jobs/recon-all/builds/$build_ID/fileParameters/$subject_name"
+			sh "rm -f $JENKINS_HOME/jobs/recon-all/builds/QueueJobs/$xml_name"
         } 
 	}
 
 	stage('DATA PROCESSING'){
-		echo "DATA PROCESSING"
+		
+		//--- Starting ssh agent on Freesurfer server ---
+		sshagent(['fsf_id_rsa']) { 
+		
+			/*--- Goal: Execute the freesurfer command, package and copy the results in the FTP server and clean the workspace.  
+			@file: jenkins.sh
+        	@Parameter{
+    			$1-action [run, delivery]
+        		$2-Name of the person who run the task ($owner_name)
+        		$3-Subject name file ($subject_name)
+        		$4-Result output folder ($output_folder) 
+			} ---*/           
+       		echo "--- Run Freesuerfer command ---"
+        	sh "ssh root@192.168.17.132 /usr/local/freesurfer/subjects/jenkins.sh run $owner_name $subject_name $output_folder"	
+		}
+		
 	}
 	
-	stage('DATA STORAGED'){
-		echo "DATA STORAGED"
+	stage('DATA DELIVERY'){
+        
+        sshagent(['fsf_id_rsa']) { 
+        	/*--- Goal: Execute the freesurfer command, package and copy the results in the FTP server and clean the workspace.  
+			@file: jenkins.sh
+        	@Parameter{
+    			$1-action [run, delivery]
+        		$2-Name of the person who run the task ($owner_name)
+        		$3-Subject name file ($subject_name)
+        		$4-Result output folder ($output_folder) 
+			} ---*/ 
+        	echo "--- Tar and copy files result to FTP Server ---"
+        	sh "ssh root@192.168.17.132 /usr/local/freesurfer/subjects/jenkins.sh delivery $owner_name $subject_name $output_folder"
+        }
 	}
 	
 	stage('NOTIFICATION'){
-		echo "NOTIFICATION"
+		echo "NOTIFICATION STAGE"
 	}
 
 }
