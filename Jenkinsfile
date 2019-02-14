@@ -41,7 +41,7 @@ node{
 			
 			echo "Copy de Subject file to SUBJECT_DIR in Freesuerfer Server" 
 			sh 'ssh -o StrictHostKeyChecking=no root@192.168.17.132'
-			sh 'scp $subject root@192.168.17.132:/usr/local/freesurfer/subjects/'
+			sh "scp $subject root@192.168.17.132:/usr/local/freesurfer/subjects/"
 			
 			//echo "Remove task and subject file"
 			//sh "rm -f $JENKINS_HOME/workspace/$JOB_NAME/$SUBJECT"
