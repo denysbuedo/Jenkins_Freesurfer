@@ -85,8 +85,9 @@ node{
         }
 	}
 	
-	stage('NOTIFICATION'){
+	stage('NOTIFICATION AND REPORT'){
 		echo "NOTIFICATION STAGE"
+		step([$class: 'InfluxDbPublisher', customData: null, customDataMap: null, customPrefix: null, target: 'influxdb'])
 	}
 
 }
