@@ -44,7 +44,7 @@ node{
 			
 			//--- Remove task and subject file ---
 			sh "rm -f $JENKINS_HOME/jobs/recon-all/builds/$build_ID/fileParameters/$subject_name"
-			sh "rm -f $JENKINS_HOME/jobs/recon-all/builds/QueueJobs/$xml_name"
+			//sh "rm -f $JENKINS_HOME/jobs/recon-all/builds/QueueJobs/$xml_name"
         } 
 	}
 
@@ -62,6 +62,7 @@ node{
         		$4-Result output folder ($output_folder) 
 			} ---*/           
        		echo "--- Run Freesuerfer command ---"
+        	sh 'ssh -o StrictHostKeyChecking=no root@192.168.17.132'
         	sh "ssh root@192.168.17.132 /usr/local/freesurfer/subjects/jenkins.sh run $owner_name $subject_name $output_folder"	
 		}
 		
@@ -79,6 +80,7 @@ node{
         		$4-Result output folder ($output_folder) 
 			} ---*/ 
         	echo "--- Tar and copy files result to FTP Server ---"
+        	sh 'ssh -o StrictHostKeyChecking=no root@192.168.17.132'
         	sh "ssh root@192.168.17.132 /usr/local/freesurfer/subjects/jenkins.sh delivery $owner_name $subject_name $output_folder"
         }
 	}
