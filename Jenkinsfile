@@ -34,7 +34,7 @@ node{
 		
 		//Copy de Subject file to SUBJECT_DIR in Freesuerfer Server
 		echo "Connecting to freesurfer server to copy subject file"
-		sshagent(['id_rsa_fsf']) {      
+		sshagent(['fsf_id_rsa']) {      
 			
 			//Create de subject file
 			def subject = new File ("$JENKINS_HOME/jobs/recon-all/builds/$build_ID/fileParameters/$subject_name")
