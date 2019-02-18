@@ -48,7 +48,7 @@ node{
         } 
 	}
 
-	stage('DATA PROCESSING'){
+	stage('DATA PROCESSING (Freesurfer)'){
 		
 		//--- Starting ssh agent on Freesurfer server ---
 		sshagent(['fsf_id_rsa']) { 
@@ -86,7 +86,8 @@ node{
 	}
 	
 	stage('NOTIFICATION AND REPORT'){
-		echo "NOTIFICATION STAGE"
+	
+		//--- Inserting data in influxdb database ---/
 		step([$class: 'InfluxDbPublisher', customData: null, customDataMap: null, customPrefix: null, target: 'influxdb'])
 	}
 
